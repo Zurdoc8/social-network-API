@@ -12,12 +12,11 @@ app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network-API', {
-    useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
 
-mongoose.set('useCreateIndex', true);
+//mongoose.set('usersCreateIndex', true);
 mongoose.set('debug', true);
 
 app.listen(PORT, () => {
