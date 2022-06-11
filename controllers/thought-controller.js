@@ -8,15 +8,12 @@ const thoughtController = {
                 path: 'reactions',
                 select: '-__v',
             })
-            .populate({
-                path: 'thoughts',
-                select: '-__v',
-            })
+    
             .select('-__v')
             .then((dbThoughtData) => res.json(dbThoughtData))
             .catch((err) => {
                 console.log(err);
-                res.status(400).json(err);
+                res.status(500).json(err);
             });
     },
     //GET one thought by ID
@@ -37,15 +34,16 @@ const thoughtController = {
             });
     },
     //CREATE thought
-    createThought({ body }, res) {
-        console.log(body)
+    createThought({ params, body }, res) {
+        console.log(params)
         Thought.create(body)
             .then((dbThoughtData) => {
                 return User.findOneAndUpdate(
-                    { _id: body.userId },
+                    { _id: params.userId },
                     { $push: { thoughts: dbThoughtData._id}},
                     { new: true }
-                    );
+                    )
+                    .catch((err) => res.json(err));
             })
             .then((dbUserData) => {
                 if (!dbUserData) {
